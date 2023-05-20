@@ -11,6 +11,7 @@ const campsiteRouter = require('./routes/campsiteRouter');
 const promotionRouter = require('./routes/promotionRouter');
 const partnerRouter = require('./routes/partnerRouter');
 const uploadRouter = require('./routes/uploadRouter');
+const favoriteRouter = require('./routes/favoriteRouter');
 
 const mongoose = require('mongoose');
 
@@ -18,24 +19,24 @@ const url = config.mongoUrl;
 const connect = mongoose.connect(url, {
     useCreateIndex: true,
     useFindAndModify: false,
-    useNewUrlParser: true, 
+    useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
-connect.then(() => console.log('Connected correctly to server'), 
+connect.then(() => console.log('Connected correctly to server'),
     err => console.log(err)
 );
-  
+
 var app = express();
 
 // Secure traffic only
 app.all('*', (req, res, next) => {
-  if (req.secure) {
-    return next();
-  } else {
-      console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
-      res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
-  }
+    if (req.secure) {
+      return next();
+    } else {
+        console.log(`Redirecting to: https://${req.hostname}:${app.get('secPort')}${req.url}`);
+        res.redirect(301, `https://${req.hostname}:${app.get('secPort')}${req.url}`);
+    }
 });
 
 // view engine setup
@@ -54,11 +55,11 @@ app.use('/users', usersRouter);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.use('/campsites', campsiteRouter);
 app.use('/promotions', promotionRouter);
 app.use('/partners', partnerRouter);
 app.use('/imageUpload', uploadRouter);
+app.use('/favorites', favoriteRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
